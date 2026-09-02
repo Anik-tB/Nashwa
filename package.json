@@ -1,0 +1,26 @@
+{
+  "name": "nashwa-fullstack",
+  "version": "1.0.0",
+  "description": "Nashwa - The Path to Growth (Full-Stack Marketplace & Academy)",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev:backend": "node --watch server.js",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev": "concurrently -k -n \"BACKEND,FRONTEND\" -c \"blue,magenta\" \"node --watch server.js\" \"npm --prefix frontend run dev\"",
+    "build": "npm --prefix frontend run build",
+    "seed": "node database/seed.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.114.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
