@@ -118,20 +118,20 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
       <div className="relative w-full max-w-3xl bg-[#FAF8F5] rounded-3xl overflow-hidden shadow-2xl border border-amber-900/15 animate-modal-enter max-h-[92vh] flex flex-col">
         {/* Close Button */}
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/90 hover:bg-white text-gray-700 shadow-md transition-colors cursor-pointer"
+          className="absolute top-3.5 right-3.5 z-20 p-2 rounded-full bg-white/90 hover:bg-white text-gray-700 shadow-md transition-colors cursor-pointer"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
 
         <div className="overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
           {/* Image & Badges */}
-          <div className="bg-[#F4EFEB] p-6 flex flex-col justify-between relative">
+          <div className="bg-[#F4EFEB] p-4 sm:p-6 flex flex-col justify-between relative">
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-white shadow-sm border border-amber-900/10">
               <img
                 src={product.image}
@@ -175,7 +175,7 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => 
           </div>
 
           {/* Details & Tabs */}
-          <div className="p-6 sm:p-7 flex flex-col justify-between bg-white">
+          <div className="p-4 sm:p-7 flex flex-col justify-between bg-white">
             <div>
               {/* Category & Rating */}
               <div className="flex items-center justify-between text-xs mb-2">

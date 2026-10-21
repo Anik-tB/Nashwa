@@ -57,10 +57,10 @@ const CartDrawer = ({ onProceedToCheckout }) => {
         className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
       ></div>
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
         <div className="w-screen max-w-md bg-[#FAF8F5] shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300 border-l border-amber-900/10">
           {/* Header */}
-          <div className="p-6 bg-white border-b border-gray-100 flex items-center justify-between">
+          <div className="p-4 sm:p-6 bg-white border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-[#BA5B55]/10 text-[#BA5B55] flex items-center justify-center">
                 <Cart size={18} />
@@ -185,7 +185,7 @@ const CartDrawer = ({ onProceedToCheckout }) => {
 
           {/* Footer with Promo Code & Checkout */}
           {items.length > 0 && (
-            <div className="p-6 border-t border-gray-100 bg-white space-y-4">
+            <div className="p-4 sm:p-6 border-t border-gray-100 bg-white space-y-4 pb-[max(env(safe-area-inset-bottom),16px)]">
               {/* Promo Code Input */}
               <div>
                 {appliedCoupon ? (

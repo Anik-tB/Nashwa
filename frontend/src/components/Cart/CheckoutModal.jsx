@@ -87,14 +87,14 @@ const CheckoutModal = ({ isOpen, onClose, onTrackOrder }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-[#FAF8F5] rounded-3xl p-6 sm:p-8 shadow-2xl border border-amber-900/15 max-h-[92vh] overflow-y-auto animate-modal-enter">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl bg-[#FAF8F5] rounded-3xl p-4 sm:p-8 shadow-2xl border border-amber-900/15 max-h-[92vh] overflow-y-auto animate-modal-enter">
         <button
           onClick={handleClose}
           aria-label="Close"
-          className="absolute top-5 right-5 p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
 
         {orderConfirmed ? (

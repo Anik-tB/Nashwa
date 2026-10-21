@@ -17,20 +17,20 @@ const HeroSection = ({ onNavigate, onSearchPillClick, onOpenManifesto }) => {
           </div>
 
           {/* Main Title */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#1E180D] tracking-tight leading-[1.1] font-serif">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#1E180D] tracking-tight leading-[1.15] font-serif">
             The Path to <span className="text-[#BA5B55] italic font-serif">Growth</span>, Crafted by Living Hands.
           </h1>
 
           {/* Subtitle */}
-          <p className="mt-5 text-base sm:text-lg text-gray-600 leading-relaxed font-normal max-w-2xl mx-auto">
+          <p className="mt-4 sm:mt-5 text-sm sm:text-lg text-gray-600 leading-relaxed font-normal max-w-2xl mx-auto">
             Discover singular small-batch artisan creations: aged Sylhet Dehn Al-Oud, hand-hammered Dhamrai bell-metal (কাঁসা), wild Sundarbans raw honey, and Sonargaon heritage weaves.
           </p>
 
           {/* Call to action buttons */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+          <div className="mt-7 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-4">
             <button
               onClick={() => onNavigate("shops")}
-              className="px-6 py-3.5 rounded-2xl bg-[#BA5B55] hover:bg-[#a34d47] text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg active:scale-98 cursor-pointer flex items-center gap-2"
+              className="px-6 py-3.5 rounded-2xl bg-[#BA5B55] hover:bg-[#a34d47] text-white font-bold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg active:scale-98 cursor-pointer flex items-center justify-center gap-2"
             >
               <Compass size={18} />
               Explore Bengal Guilds
@@ -38,7 +38,7 @@ const HeroSection = ({ onNavigate, onSearchPillClick, onOpenManifesto }) => {
 
             <button
               onClick={() => onNavigate("university")}
-              className="px-6 py-3.5 rounded-2xl bg-white text-gray-900 font-bold text-xs uppercase tracking-wider border border-gray-200 hover:border-[#BA5B55] hover:text-[#BA5B55] transition-all shadow-2xs hover:shadow-xs active:scale-98 cursor-pointer flex items-center gap-2"
+              className="px-6 py-3.5 rounded-2xl bg-white text-gray-900 font-bold text-xs uppercase tracking-wider border border-gray-200 hover:border-[#BA5B55] hover:text-[#BA5B55] transition-all shadow-2xs hover:shadow-xs active:scale-98 cursor-pointer flex items-center justify-center gap-2"
             >
               <BookOpen size={18} />
               Nashwa Academy
@@ -46,7 +46,7 @@ const HeroSection = ({ onNavigate, onSearchPillClick, onOpenManifesto }) => {
 
             <button
               onClick={onOpenManifesto}
-              className="px-5 py-3.5 rounded-2xl bg-amber-500/10 text-amber-950 font-bold text-xs uppercase tracking-wider border border-amber-500/20 hover:bg-amber-500/20 transition-all active:scale-98 cursor-pointer flex items-center gap-2"
+              className="px-5 py-3.5 rounded-2xl bg-amber-500/10 text-amber-950 font-bold text-xs uppercase tracking-wider border border-amber-500/20 hover:bg-amber-500/20 transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2"
             >
               <ShieldCheck size={18} className="text-[#BA5B55]" />
               Our Manifesto
@@ -54,13 +54,13 @@ const HeroSection = ({ onNavigate, onSearchPillClick, onOpenManifesto }) => {
           </div>
 
           {/* Search Suggestion Pills */}
-          <div className="mt-8 flex items-center justify-center flex-wrap gap-2 text-xs text-gray-500">
-            <span className="font-bold text-gray-800">Popular:</span>
+          <div className="mt-7 sm:mt-8 flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar flex-nowrap sm:flex-wrap gap-2 text-xs text-gray-500 pb-1">
+            <span className="font-bold text-gray-800 shrink-0">Popular:</span>
             {["Sylhet Dehn Al-Oud", "Dhamrai Kasha Teapot", "Sundarbans Raw Honey", "Bijoypur Terracotta", "Tangail Indigo Khadi", "Matir Bhar"].map((pill) => (
               <button
                 key={pill}
                 onClick={() => onSearchPillClick(pill)}
-                className="px-3.5 py-1 bg-white hover:bg-amber-50 hover:text-[#BA5B55] hover:border-[#BA5B55]/40 border border-gray-200 rounded-full transition-all cursor-pointer text-gray-700 font-semibold shadow-2xs text-[11px]"
+                className="px-3.5 py-1 bg-white hover:bg-amber-50 hover:text-[#BA5B55] hover:border-[#BA5B55]/40 border border-gray-200 rounded-full transition-all cursor-pointer text-gray-700 font-semibold shadow-2xs text-[11px] shrink-0"
               >
                 {pill}
               </button>

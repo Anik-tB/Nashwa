@@ -116,8 +116,8 @@ const ProductGrid = ({
       </div>
 
       {/* Filter Chips Bar */}
-      <div className="mb-8 flex flex-wrap items-center gap-2 text-xs">
-        <span className="font-bold text-gray-700 text-xs flex items-center gap-1">
+      <div className="mb-6 flex items-center gap-2 text-xs overflow-x-auto no-scrollbar pb-1.5 flex-nowrap sm:flex-wrap">
+        <span className="font-bold text-gray-700 text-xs flex items-center gap-1 shrink-0">
           <Filter size={14} className="text-[#BA5B55]" /> Filter:
         </span>
 
@@ -211,7 +211,7 @@ const ProductGrid = ({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}

@@ -40,19 +40,19 @@ const ArtisanConcierge = () => {
   return (
     <>
       {/* Floating Trigger Button */}
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40">
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Artisan Concierge"
-          className="group relative flex items-center gap-2.5 bg-[#1E180D] hover:bg-[#BA5B55] text-white px-4 py-3 rounded-full shadow-2xl transition-all duration-300 active:scale-95 border border-amber-500/30 cursor-pointer"
+          className="group relative flex items-center gap-2 bg-[#1E180D] hover:bg-[#BA5B55] text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-2xl transition-all duration-300 active:scale-95 border border-amber-500/30 cursor-pointer"
         >
           <div className="relative">
-            <Message size={20} className="text-[#D4A373] group-hover:text-white transition-colors" />
+            <Message size={18} className="text-[#D4A373] group-hover:text-white transition-colors" />
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
           </div>
           <span className="text-xs font-bold tracking-wide">
-            Artisan Concierge
+            Concierge
           </span>
           <span className="hidden sm:inline text-[10px] text-amber-200/80 font-normal">
             (কারিগর পরামর্শ)
@@ -62,7 +62,7 @@ const ArtisanConcierge = () => {
 
       {/* Concierge Desk Popup */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] max-w-sm bg-[#FAF8F5] rounded-3xl shadow-2xl border border-amber-900/15 overflow-hidden animate-in slide-in-from-bottom-5 duration-200 flex flex-col max-h-[85vh]">
+        <div className="fixed bottom-20 right-2 sm:right-6 z-50 w-[95vw] sm:w-[92vw] max-w-sm bg-[#FAF8F5] rounded-3xl shadow-2xl border border-amber-900/15 overflow-hidden animate-in slide-in-from-bottom-5 duration-200 flex flex-col max-h-[80vh]">
           {/* Header */}
           <div className="p-4 sm:p-5 bg-gradient-to-r from-[#1E180D] via-[#2D2214] to-[#1E180D] text-white relative">
             <button

@@ -30,10 +30,10 @@ const WishlistDrawer = ({ onSelectProduct }) => {
         className="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
       ></div>
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
         <div className="w-screen max-w-md bg-[#FAF8F5] shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300 border-l border-amber-900/10">
           {/* Header */}
-          <div className="p-6 bg-white border-b border-gray-100 flex items-center justify-between">
+          <div className="p-4 sm:p-6 bg-white border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-[#BA5B55]/10 text-[#BA5B55] flex items-center justify-center">
                 <Heart size={18} className="fill-[#BA5B55]" />
@@ -135,7 +135,7 @@ const WishlistDrawer = ({ onSelectProduct }) => {
 
           {/* Footer actions */}
           {wishlist.length > 0 && (
-            <div className="p-6 bg-white border-t border-gray-100 space-y-3">
+            <div className="p-4 sm:p-6 bg-white border-t border-gray-100 space-y-3 pb-[max(env(safe-area-inset-bottom),16px)]">
               <button
                 onClick={handleMoveAllToCart}
                 className="w-full py-3 bg-[#BA5B55] hover:bg-[#a34d47] text-white rounded-xl text-xs font-bold tracking-wide uppercase shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"

@@ -198,7 +198,7 @@ const Footer = ({ onNavigate, onOpenFaq }) => {
 
         {/* Guild Trust Badges & FAQ */}
         <div className="py-6 border-b border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-amber-200/80">
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:flex md:flex-wrap items-start sm:items-center gap-2.5 sm:gap-6">
             <span className="flex items-center gap-1.5 font-medium">
               <span className="text-[#D4A373]">✓</span> 100% Direct Fair-Trade for Bengal Artisans
             </span>
