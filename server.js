@@ -11,6 +11,7 @@ import shopsRoutes from './backend/routes/shops.js';
 import universityRoutes from './backend/routes/university.js';
 import eventsRoutes from './backend/routes/events.js';
 import ordersRoutes from './backend/routes/orders.js';
+import newsletterRoutes from './backend/routes/newsletter.js';
 
 // Initialize and ensure database is ready
 initDatabase();
@@ -50,6 +51,7 @@ app.use('/api/shops', shopsRoutes);
 app.use('/api/university', universityRoutes);
 app.use('/api/events', eventsRoutes);
 app.use('/api/orders', ordersRoutes);
+app.use('/api/newsletter', newsletterRoutes);
 
 // Favicon & Chrome DevTools probes
 app.get('/favicon.ico', (req, res) => res.status(204).end());
