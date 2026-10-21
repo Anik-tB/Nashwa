@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { UserCircle, Logout, ShoppingBag } from "@mynaui/icons-react";
 import { useAuth } from "../../context/AuthContext";
 
-const ProfileButton = ({ onOpenAuth, onOpenOrders }) => {
+const ProfileButton = ({ onOpenAuth, onOpenOrders, onOpenProfile }) => {
   const { user, isAuthenticated, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -20,7 +20,13 @@ const ProfileButton = ({ onOpenAuth, onOpenOrders }) => {
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (isAuthenticated && onOpenProfile) {
+            onOpenProfile();
+          } else {
+            setIsOpen(!isOpen);
+          }
+        }}
         aria-label="User Account"
         className="flex items-center gap-2 p-1.5 rounded-full hover:bg-gray-100 text-[#1E180D] hover:text-[#BA5B55] transition-colors cursor-pointer"
       >
@@ -34,24 +40,46 @@ const ProfileButton = ({ onOpenAuth, onOpenOrders }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
           {isAuthenticated && user ? (
             <div>
-              <div className="px-4 py-3 border-b border-gray-100">
-                <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold">Signed in as</p>
-                <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
+              <div
+                onClick={() => {
+                  setIsOpen(false);
+                  if (onOpenProfile) onOpenProfile();
+                }}
+                className="px-4 py-3 border-b border-gray-100 cursor-pointer hover:bg-amber-50/50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold">Patron Account</p>
+                  <span className="text-[9px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded-full">
+                    {user.guildTier || "Fellow"}
+                  </span>
+                </div>
+                <p className="text-sm font-bold text-gray-900 truncate mt-0.5">{user.name}</p>
                 <p className="text-xs text-gray-500 truncate">{user.email}</p>
               </div>
 
               <button
                 onClick={() => {
                   setIsOpen(false);
+                  if (onOpenProfile) onOpenProfile();
+                }}
+                className="w-full px-4 py-2.5 text-left text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+              >
+                <UserCircle size={17} className="text-[#BA5B55]" />
+                Guild Tier & Security
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsOpen(false);
                   if (onOpenOrders) onOpenOrders();
                 }}
-                className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+                className="w-full px-4 py-2.5 text-left text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-2.5 transition-colors cursor-pointer"
               >
-                <ShoppingBag size={18} className="text-gray-400" />
-                My Orders
+                <ShoppingBag size={17} className="text-gray-400" />
+                My Orders & Tracking
               </button>
 
               <div className="border-t border-gray-100 my-1"></div>
