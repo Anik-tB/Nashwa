@@ -21,6 +21,7 @@ import LoginModal from "./components/LoginModal/LoginModal";
 import PatronProfileModal from "./components/Account/PatronProfileModal";
 import RecentlyViewedSection from "./components/Catalog/RecentlyViewedSection";
 import ManifestoModal from "./components/Manifesto/ManifestoModal";
+import ArtisanFaqModal from "./components/Common/ArtisanFaqModal";
 import ArtisanConcierge from "./components/Common/ArtisanConcierge";
 import Footer from "./components/Footer/Footer";
 import { Check } from "@mynaui/icons-react";
@@ -46,6 +47,7 @@ const MainApp = () => {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [ordersOpen, setOrdersOpen] = useState(false);
   const [manifestoOpen, setManifestoOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(false);
   const [trackingOrderId, setTrackingOrderId] = useState(null);
   const [selectedQuickViewProduct, setSelectedQuickViewProduct] = useState(null);
 
@@ -175,6 +177,7 @@ const MainApp = () => {
               onClearSearch={clearAllFilters}
               categoryTitle={categoryTitle}
               onBuyNow={() => setCheckoutOpen(true)}
+              onOpenFaq={() => setFaqOpen(true)}
             />
 
             {/* Recently Admired Works (Patron Journey) */}
@@ -202,6 +205,7 @@ const MainApp = () => {
               onClearSearch={clearAllFilters}
               categoryTitle={categoryTitle}
               onBuyNow={() => setCheckoutOpen(true)}
+              onOpenFaq={() => setFaqOpen(true)}
             />
             <RecentlyViewedSection onSelectProduct={(p) => setSelectedQuickViewProduct(p)} />
           </div>
@@ -213,7 +217,7 @@ const MainApp = () => {
       </main>
 
       {/* Footer */}
-      <Footer onNavigate={(tab) => setActiveTab(tab)} />
+      <Footer onNavigate={(tab) => setActiveTab(tab)} onOpenFaq={() => setFaqOpen(true)} />
 
       {/* Slide-over Drawers */}
       <CartDrawer onProceedToCheckout={() => setCheckoutOpen(true)} />
@@ -246,6 +250,11 @@ const MainApp = () => {
         }}
       />
 
+      <ArtisanFaqModal
+        isOpen={faqOpen}
+        onClose={() => setFaqOpen(false)}
+      />
+
       {/* Quick View when triggered from search or wishlist */}
       {selectedQuickViewProduct && (
         <ProductQuickView
@@ -253,6 +262,7 @@ const MainApp = () => {
           product={selectedQuickViewProduct}
           onClose={() => setSelectedQuickViewProduct(null)}
           onBuyNow={() => setCheckoutOpen(true)}
+          onOpenFaq={() => setFaqOpen(true)}
         />
       )}
 
