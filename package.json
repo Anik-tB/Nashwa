@@ -4,6 +4,9 @@
   "description": "Nashwa - The Path to Growth (Full-Stack Marketplace & Academy)",
   "main": "server.js",
   "type": "module",
+  "workspaces": [
+    "frontend"
+  ],
   "scripts": {
     "start": "node server.js",
     "dev:backend": "node --watch server.js",
