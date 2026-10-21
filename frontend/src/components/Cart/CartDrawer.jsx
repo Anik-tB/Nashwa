@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X, Trash, ArrowRight, Cart, Plus, Minus, Tag, Check, Sparkles, ShieldCheck } from "@mynaui/icons-react";
 import { useCart } from "../../context/CartContext";
 import { useCurrency } from "../../context/CurrencyContext";
+import { triggerHaptic } from "../../lib/haptics";
 
 const CartDrawer = ({ onProceedToCheckout }) => {
   const {
@@ -75,9 +76,12 @@ const CartDrawer = ({ onProceedToCheckout }) => {
               </div>
             </div>
             <button
-              onClick={closeCart}
+              onClick={() => {
+                triggerHaptic("light");
+                closeCart();
+              }}
               aria-label="Close cart"
-              className="p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+              className="p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer touch-press"
             >
               <X size={20} />
             </button>
@@ -155,18 +159,24 @@ const CartDrawer = ({ onProceedToCheckout }) => {
                       {/* Quantity buttons */}
                       <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-2xs">
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          className="px-2.5 py-1 text-gray-600 hover:bg-gray-100 cursor-pointer text-xs font-bold"
+                          onClick={() => {
+                            triggerHaptic("selection");
+                            updateQuantity(item.product.id, item.quantity - 1);
+                          }}
+                          className="px-2.5 py-1 text-gray-600 hover:bg-gray-100 cursor-pointer text-xs font-bold touch-press"
                           aria-label="Decrease quantity"
                         >
                           <Minus size={12} />
                         </button>
-                        <span className="px-2.5 py-1 text-xs font-bold text-gray-900 min-w-6 text-center">
+                        <span className="px-2.5 py-1 text-xs font-bold text-gray-900 min-w-6 text-center select-none">
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          className="px-2.5 py-1 text-gray-600 hover:bg-gray-100 cursor-pointer text-xs font-bold"
+                          onClick={() => {
+                            triggerHaptic("selection");
+                            updateQuantity(item.product.id, item.quantity + 1);
+                          }}
+                          className="px-2.5 py-1 text-gray-600 hover:bg-gray-100 cursor-pointer text-xs font-bold touch-press"
                           aria-label="Increase quantity"
                         >
                           <Plus size={12} />
@@ -255,10 +265,11 @@ const CartDrawer = ({ onProceedToCheckout }) => {
               {/* Checkout Button */}
               <button
                 onClick={() => {
+                  triggerHaptic("medium");
                   closeCart();
                   onProceedToCheckout();
                 }}
-                className="w-full py-3.5 bg-[#BA5B55] hover:bg-[#a34d47] text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all active:scale-98 cursor-pointer"
+                className="w-full py-3.5 bg-[#BA5B55] hover:bg-[#a34d47] text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all active:scale-98 cursor-pointer touch-press"
               >
                 <span>Proceed to Secure Checkout</span>
                 <ArrowRight size={16} />

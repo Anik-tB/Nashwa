@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bell, CheckCircle } from "@mynaui/icons-react";
+import { triggerHaptic } from "../../lib/haptics";
 
 const NotificationButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +39,7 @@ const NotificationButton = () => {
   }, []);
 
   const handleToggle = () => {
+    triggerHaptic("light");
     setIsOpen(!isOpen);
     if (!isOpen) {
       setHasUnread(false);
@@ -49,7 +51,7 @@ const NotificationButton = () => {
       <button
         onClick={handleToggle}
         aria-label="Notifications"
-        className="relative flex justify-center items-center p-2 text-[#1E180D] cursor-pointer hover:text-[#BA5B55] transition-colors"
+        className="relative flex justify-center items-center p-2 text-[#1E180D] cursor-pointer hover:text-[#BA5B55] transition-colors touch-press"
       >
         <Bell size={24} />
         {hasUnread && (

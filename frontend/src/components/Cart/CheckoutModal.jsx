@@ -4,6 +4,7 @@ import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { useCurrency } from "../../context/CurrencyContext";
 import OrderInvoiceModal from "../Orders/OrderInvoiceModal";
+import { triggerHaptic } from "../../lib/haptics";
 
 const CheckoutModal = ({ isOpen, onClose, onTrackOrder }) => {
   const { items, subtotal, discountAmount, shippingFee, totalPrice, appliedCoupon, clearCart } = useCart();
@@ -87,12 +88,18 @@ const CheckoutModal = ({ isOpen, onClose, onTrackOrder }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-[#FAF8F5] rounded-3xl p-4 sm:p-8 shadow-2xl border border-amber-900/15 max-h-[92vh] overflow-y-auto animate-modal-enter">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl bg-[#FAF8F5] rounded-t-[32px] sm:rounded-3xl p-4 sm:p-8 shadow-2xl border border-amber-900/15 max-h-[90dvh] sm:max-h-[92vh] overflow-y-auto animate-sheet-up sm:animate-modal-enter pb-[max(env(safe-area-inset-bottom),1.5rem)] sm:pb-8">
+        {/* Mobile Drag Handle */}
+        <div className="sm:hidden w-10 h-1 bg-gray-300 rounded-full mx-auto mb-3 shrink-0"></div>
+
         <button
-          onClick={handleClose}
+          onClick={() => {
+            triggerHaptic("light");
+            handleClose();
+          }}
           aria-label="Close"
-          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer touch-press"
         >
           <X size={18} />
         </button>

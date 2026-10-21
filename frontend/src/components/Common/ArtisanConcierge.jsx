@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Message, X, Sparkles, Send, Check, Heart, ShieldCheck, Telephone, ChatMessages } from "@mynaui/icons-react";
+import { triggerHaptic } from "../../lib/haptics";
 
 const ArtisanConcierge = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,11 +41,14 @@ const ArtisanConcierge = () => {
   return (
     <>
       {/* Floating Trigger Button */}
-      <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40">
+      <div className="fixed bottom-20 right-3 sm:bottom-6 sm:right-6 z-40">
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            triggerHaptic("medium");
+            setIsOpen(!isOpen);
+          }}
           aria-label="Artisan Concierge"
-          className="group relative flex items-center gap-2 bg-[#1E180D] hover:bg-[#BA5B55] text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-2xl transition-all duration-300 active:scale-95 border border-amber-500/30 cursor-pointer"
+          className="group relative flex items-center gap-2 bg-[#1E180D] hover:bg-[#BA5B55] text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full shadow-2xl transition-all duration-300 touch-press border border-amber-500/30 cursor-pointer"
         >
           <div className="relative">
             <Message size={18} className="text-[#D4A373] group-hover:text-white transition-colors" />
@@ -62,12 +66,15 @@ const ArtisanConcierge = () => {
 
       {/* Concierge Desk Popup */}
       {isOpen && (
-        <div className="fixed bottom-20 right-2 sm:right-6 z-50 w-[95vw] sm:w-[92vw] max-w-sm bg-[#FAF8F5] rounded-3xl shadow-2xl border border-amber-900/15 overflow-hidden animate-in slide-in-from-bottom-5 duration-200 flex flex-col max-h-[80vh]">
+        <div className="fixed bottom-20 right-2 sm:right-6 z-50 w-[95vw] sm:w-[92vw] max-w-sm bg-[#FAF8F5] rounded-3xl shadow-2xl border border-amber-900/15 overflow-hidden animate-sheet-up sm:animate-in sm:slide-in-from-bottom-5 duration-200 flex flex-col max-h-[78vh]">
           {/* Header */}
           <div className="p-4 sm:p-5 bg-gradient-to-r from-[#1E180D] via-[#2D2214] to-[#1E180D] text-white relative">
             <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-3.5 right-3.5 p-1.5 text-gray-400 hover:text-white rounded-full transition-colors cursor-pointer"
+              onClick={() => {
+                triggerHaptic("light");
+                setIsOpen(false);
+              }}
+              className="absolute top-3.5 right-3.5 p-1.5 text-gray-400 hover:text-white rounded-full transition-colors cursor-pointer touch-press"
             >
               <X size={16} />
             </button>

@@ -3,6 +3,7 @@ import ProductCard from "./ProductCard";
 import ProductQuickView from "./ProductQuickView";
 import { Search, Filter, Sparkles, Check, X } from "@mynaui/icons-react";
 import { useCurrency } from "../../context/CurrencyContext";
+import { triggerHaptic } from "../../lib/haptics";
 
 const ProductGrid = ({
   products,
@@ -104,8 +105,11 @@ const ProductGrid = ({
           </label>
           <select
             value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="bg-white border border-gray-200 rounded-xl px-3.5 py-2 text-xs text-gray-800 font-semibold focus:outline-none focus:border-[#BA5B55] shadow-2xs cursor-pointer"
+            onChange={(e) => {
+              triggerHaptic("selection");
+              setSortOrder(e.target.value);
+            }}
+            className="bg-white border border-gray-200 rounded-xl px-3.5 py-2 text-xs text-gray-800 font-semibold focus:outline-none focus:border-[#BA5B55] shadow-2xs cursor-pointer touch-press"
           >
             <option value="featured">✨ Guild Curated</option>
             <option value="price_asc">Price: Low to High</option>
@@ -115,8 +119,8 @@ const ProductGrid = ({
         </div>
       </div>
 
-      {/* Filter Chips Bar */}
-      <div className="mb-6 flex items-center gap-2 text-xs overflow-x-auto no-scrollbar pb-1.5 flex-nowrap sm:flex-wrap">
+      {/* Filter Chips Bar - Horizontal Touch Snap on Mobile */}
+      <div className="mb-5 sm:mb-6 flex items-center gap-2 text-xs overflow-x-auto no-scrollbar pb-1.5 flex-nowrap sm:flex-wrap snap-carousel -mx-4 px-4 sm:mx-0 sm:px-0">
         <span className="font-bold text-gray-700 text-xs flex items-center gap-1 shrink-0">
           <Filter size={14} className="text-[#BA5B55]" /> Filter:
         </span>
@@ -130,8 +134,11 @@ const ProductGrid = ({
         ].map((chip) => (
           <button
             key={chip.id}
-            onClick={() => setPriceFilter(chip.id)}
-            className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
+            onClick={() => {
+              triggerHaptic("selection");
+              setPriceFilter(chip.id);
+            }}
+            className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer shrink-0 touch-press snap-start ${
               priceFilter === chip.id
                 ? "bg-[#1E180D] text-white shadow-2xs"
                 : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300"
@@ -143,8 +150,11 @@ const ProductGrid = ({
 
         {/* Rating chip */}
         <button
-          onClick={() => setRatingFilter(ratingFilter === "high" ? "all" : "high")}
-          className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
+          onClick={() => {
+            triggerHaptic("selection");
+            setRatingFilter(ratingFilter === "high" ? "all" : "high");
+          }}
+          className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer shrink-0 touch-press snap-start ${
             ratingFilter === "high"
               ? "bg-[#BA5B55] text-white shadow-2xs"
               : "bg-white text-gray-700 border border-gray-200 hover:border-gray-300"
@@ -157,8 +167,11 @@ const ProductGrid = ({
         {availableTags.slice(0, 4).map((tag) => (
           <button
             key={tag}
-            onClick={() => setSelectedTag(selectedTag === tag ? "all" : tag)}
-            className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer ${
+            onClick={() => {
+              triggerHaptic("selection");
+              setSelectedTag(selectedTag === tag ? "all" : tag);
+            }}
+            className={`px-3 py-1.5 rounded-full font-semibold transition-all cursor-pointer shrink-0 touch-press snap-start ${
               selectedTag === tag
                 ? "bg-[#BA5B55] text-white shadow-2xs"
                 : "bg-amber-50/70 text-amber-900 border border-amber-900/10 hover:bg-amber-100"
@@ -171,17 +184,20 @@ const ProductGrid = ({
         {/* Reset Facets */}
         {hasActiveFacets && (
           <button
-            onClick={resetAllFacets}
-            className="text-xs text-[#BA5B55] hover:text-[#9A423D] font-bold underline cursor-pointer ml-1"
+            onClick={() => {
+              triggerHaptic("light");
+              resetAllFacets();
+            }}
+            className="text-xs text-[#BA5B55] hover:text-[#9A423D] font-bold underline cursor-pointer ml-1 shrink-0 touch-press"
           >
             Reset Filters
           </button>
         )}
       </div>
 
-      {/* Grid Content */}
+      {/* Grid Content with Mobile Proportions */}
       {isLoading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
           {[...Array(8)].map((_, i) => (
             <div key={i} className="bg-white rounded-3xl p-4 animate-pulse border border-gray-100 h-80">
               <div className="aspect-square bg-gray-100 rounded-2xl mb-4"></div>

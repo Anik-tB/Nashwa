@@ -3,6 +3,7 @@ import { X, Heart, Trash, Cart, ArrowRight } from '@mynaui/icons-react';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
+import { triggerHaptic } from '../../lib/haptics';
 
 const WishlistDrawer = ({ onSelectProduct }) => {
   const { wishlist, removeFromWishlist, clearWishlist, isWishlistOpen, closeWishlist } = useWishlist();
@@ -12,11 +13,13 @@ const WishlistDrawer = ({ onSelectProduct }) => {
   if (!isWishlistOpen) return null;
 
   const handleMoveToCart = (product) => {
+    triggerHaptic("success");
     addToCart(product, 1);
     removeFromWishlist(product.id);
   };
 
   const handleMoveAllToCart = () => {
+    triggerHaptic("success");
     wishlist.forEach((p) => addToCart(p, 1));
     clearWishlist();
     closeWishlist();

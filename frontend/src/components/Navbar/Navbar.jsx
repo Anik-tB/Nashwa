@@ -11,6 +11,7 @@ import MenuButton from "./MenuButton";
 import AnnouncementBar from "./AnnouncementBar";
 import { Search, Sparkles, ArrowRight } from "@mynaui/icons-react";
 import { useCurrency } from "../../context/CurrencyContext";
+import { triggerHaptic } from "../../lib/haptics";
 
 const Navbar = ({
   activeTab,
@@ -93,10 +94,11 @@ const Navbar = ({
         <div
           key={p.id}
           onClick={() => {
+            triggerHaptic("light");
             setShowSuggestions(false);
             if (onSelectProduct) onSelectProduct(p);
           }}
-          className="py-2 px-2 hover:bg-amber-50/70 rounded-xl flex items-center gap-3 cursor-pointer transition-colors"
+          className="py-2 px-2 hover:bg-amber-50/70 rounded-xl flex items-center gap-3 cursor-pointer transition-colors touch-press"
         >
           <img
             src={p.image}
@@ -186,8 +188,11 @@ const Navbar = ({
               {/* Mobile Quick Currency Switcher */}
               <button
                 type="button"
-                onClick={() => setCurrency(currency === "BDT" ? "USD" : "BDT")}
-                className="md:hidden px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-[#BA5B55] rounded-xl text-[11px] font-bold border border-amber-500/20 cursor-pointer transition-colors active:scale-95"
+                onClick={() => {
+                  triggerHaptic("selection");
+                  setCurrency(currency === "BDT" ? "USD" : "BDT");
+                }}
+                className="md:hidden px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-[#BA5B55] rounded-xl text-[11px] font-bold border border-amber-500/20 cursor-pointer transition-colors touch-press select-none"
                 title="Toggle Currency"
               >
                 {currency === "BDT" ? "৳ BDT" : "$ USD"}
@@ -233,10 +238,11 @@ const Navbar = ({
                 <button
                   key={item.id}
                   onClick={() => {
+                    triggerHaptic("selection");
                     setActiveTab(item.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`text-left px-3 py-2 rounded-xl text-xs font-bold transition-colors ${
+                  className={`text-left px-3.5 py-2.5 rounded-xl text-xs font-bold transition-colors touch-press ${
                     activeTab === item.id
                       ? "bg-[#BA5B55]/10 text-[#BA5B55]"
                       : "text-gray-800 hover:bg-gray-50"
@@ -248,10 +254,11 @@ const Navbar = ({
 
               <button
                 onClick={() => {
+                  triggerHaptic("light");
                   setMobileMenuOpen(false);
                   if (onOpenManifesto) onOpenManifesto();
                 }}
-                className="text-left px-3 py-2 rounded-xl text-xs font-bold text-[#BA5B55] hover:bg-amber-50"
+                className="text-left px-3.5 py-2.5 rounded-xl text-xs font-bold text-[#BA5B55] hover:bg-amber-50 touch-press"
               >
                 The Slow Craft Manifesto
               </button>

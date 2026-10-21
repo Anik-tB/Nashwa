@@ -4,6 +4,7 @@ import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
 import { useCurrency } from "../../context/CurrencyContext";
 import ProvenanceModal from "./ProvenanceModal";
+import { triggerHaptic } from "../../lib/haptics";
 
 const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => {
   const { addToCart } = useCart();
@@ -76,12 +77,14 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => 
   if (!isOpen || !product) return null;
 
   const handleAddToCart = () => {
+    triggerHaptic("success");
     addToCart(product, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
 
   const handleInstantBuy = () => {
+    triggerHaptic("medium");
     addToCart(product, quantity);
     onClose();
     if (onBuyNow) onBuyNow();
@@ -118,13 +121,19 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-3xl bg-[#FAF8F5] rounded-3xl overflow-hidden shadow-2xl border border-amber-900/15 animate-modal-enter max-h-[92vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/65 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-3xl bg-[#FAF8F5] rounded-t-[32px] sm:rounded-3xl overflow-hidden shadow-2xl border border-amber-900/15 animate-sheet-up sm:animate-modal-enter max-h-[90dvh] sm:max-h-[92vh] flex flex-col">
+        {/* Mobile Drag Indicator Handle */}
+        <div className="sm:hidden w-10 h-1 bg-gray-300 rounded-full mx-auto my-2 shrink-0"></div>
+
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={() => {
+            triggerHaptic("light");
+            onClose();
+          }}
           aria-label="Close"
-          className="absolute top-3.5 right-3.5 z-20 p-2 rounded-full bg-white/90 hover:bg-white text-gray-700 shadow-md transition-colors cursor-pointer"
+          className="absolute top-3.5 right-3.5 z-20 p-2 rounded-full bg-white/90 hover:bg-white text-gray-700 shadow-md transition-colors cursor-pointer touch-press"
         >
           <X size={18} />
         </button>
@@ -424,8 +433,8 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => 
               </div>
             </div>
 
-            {/* Quantity, Share & Actions */}
-            <div className="mt-5 pt-4 border-t border-gray-100 flex flex-col gap-2.5">
+            {/* Quantity, Share & Actions - Docked Sticky Action Bar on Mobile */}
+            <div className="sticky bottom-0 bg-white/95 backdrop-blur-md pt-3.5 pb-3 sm:pb-0 border-t border-gray-100 flex flex-col gap-2.5 z-20 shadow-[0_-4px_16px_rgba(0,0,0,0.04)] sm:shadow-none pb-[max(env(safe-area-inset-bottom),12px)] sm:pb-0">
               {/* Share Craft Bar */}
               <div className="flex items-center justify-between text-xs pb-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
@@ -434,16 +443,22 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => 
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={handleShareWhatsApp}
-                    className="text-[10px] px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg font-semibold flex items-center gap-1 border border-emerald-200 transition-colors cursor-pointer"
+                    onClick={() => {
+                      triggerHaptic("light");
+                      handleShareWhatsApp();
+                    }}
+                    className="text-[10px] px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg font-semibold flex items-center gap-1 border border-emerald-200 transition-colors cursor-pointer touch-press"
                     title="Share via WhatsApp"
                   >
                     <Share size={12} /> WhatsApp
                   </button>
                   <button
                     type="button"
-                    onClick={handleCopyLink}
-                    className="text-[10px] px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                    onClick={() => {
+                      triggerHaptic("light");
+                      handleCopyLink();
+                    }}
+                    className="text-[10px] px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer touch-press"
                     title="Copy Link"
                   >
                     {shareCopied ? <Check size={12} className="text-emerald-600" /> : <Copy size={12} />}
@@ -456,17 +471,23 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => 
                 <span className="text-xs font-semibold text-gray-700">Quantity</span>
                 <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
                   <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3 py-1 text-gray-600 hover:bg-gray-200 cursor-pointer font-bold text-sm"
+                    onClick={() => {
+                      triggerHaptic("selection");
+                      setQuantity(Math.max(1, quantity - 1));
+                    }}
+                    className="px-3.5 py-1 text-gray-600 hover:bg-gray-200 cursor-pointer font-bold text-sm touch-press"
                   >
                     -
                   </button>
-                  <span className="px-3 py-1 text-xs font-bold text-gray-900 min-w-8 text-center">
+                  <span className="px-3 py-1 text-xs font-bold text-gray-900 min-w-8 text-center select-none">
                     {quantity}
                   </span>
                   <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="px-3 py-1 text-gray-600 hover:bg-gray-200 cursor-pointer font-bold text-sm"
+                    onClick={() => {
+                      triggerHaptic("selection");
+                      setQuantity(quantity + 1);
+                    }}
+                    className="px-3.5 py-1 text-gray-600 hover:bg-gray-200 cursor-pointer font-bold text-sm touch-press"
                   >
                     +
                   </button>
@@ -476,7 +497,7 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => 
               <div className="grid grid-cols-2 gap-2 mt-1">
                 <button
                   onClick={handleAddToCart}
-                  className={`py-3 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer ${
+                  className={`py-3.5 px-3 rounded-2xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer touch-press ${
                     added
                       ? "bg-emerald-600 text-white"
                       : "bg-gray-900 hover:bg-gray-800 text-white"
@@ -488,7 +509,7 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => 
 
                 <button
                   onClick={handleInstantBuy}
-                  className="py-3 px-3 rounded-xl font-bold text-xs bg-[#BA5B55] hover:bg-[#a34d47] text-white flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
+                  className="py-3.5 px-3 rounded-2xl font-bold text-xs bg-[#BA5B55] hover:bg-[#a34d47] text-white flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer touch-press"
                 >
                   <span>Instant Acquire</span>
                 </button>

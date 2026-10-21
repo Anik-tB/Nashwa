@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Sparkles, Eye, Star } from "@mynaui/icons-react";
 import { useCurrency } from "../../context/CurrencyContext";
+import { triggerHaptic } from "../../lib/haptics";
 
 const RecentlyViewedSection = ({ onSelectProduct }) => {
   const { formatPrice } = useCurrency();
@@ -18,40 +19,46 @@ const RecentlyViewedSection = ({ onSelectProduct }) => {
   if (!recentItems || recentItems.length === 0) return null;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 mt-8 border-t border-amber-900/10">
-      <div className="flex items-center justify-between mb-6">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 mt-6 sm:mt-8 border-t border-amber-900/10">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100/70 rounded-full text-[10px] font-bold tracking-widest uppercase text-amber-900 mb-1.5">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100/70 rounded-full text-[10px] font-bold tracking-widest uppercase text-amber-900 mb-1">
             <Sparkles size={12} className="text-[#BA5B55]" />
             <span>Your Patron Journey</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold font-serif text-gray-900">
+          <h2 className="text-lg sm:text-2xl font-bold font-serif text-gray-900">
             Recently Admired Pieces
           </h2>
         </div>
         <button
           onClick={() => {
+            triggerHaptic("light");
             localStorage.removeItem("nashwa_recently_viewed");
             setRecentItems([]);
           }}
-          className="text-xs font-semibold text-gray-400 hover:text-gray-700 underline cursor-pointer"
+          className="text-xs font-semibold text-gray-400 hover:text-gray-700 underline cursor-pointer touch-press"
         >
           Clear History
         </button>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+      {/* Snap Carousel on Mobile, Grid on Tablet/Desktop */}
+      <div className="flex sm:grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible no-scrollbar snap-carousel -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
         {recentItems.map((item) => (
           <div
             key={item.id}
-            onClick={() => onSelectProduct && onSelectProduct(item)}
-            className="group bg-white rounded-2xl p-2.5 border border-amber-900/10 hover:border-[#BA5B55]/50 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col"
+            onClick={() => {
+              triggerHaptic("light");
+              if (onSelectProduct) onSelectProduct(item);
+            }}
+            className="group bg-white rounded-2xl p-2.5 border border-amber-900/10 hover:border-[#BA5B55]/50 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col w-[140px] sm:w-auto shrink-0 snap-start touch-press select-none"
           >
             <div className="relative aspect-square rounded-xl overflow-hidden bg-amber-50/50 mb-2">
               <img
                 src={item.image}
                 alt={item.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <span className="p-2 rounded-full bg-white/95 text-gray-900 shadow-sm">
@@ -62,10 +69,10 @@ const RecentlyViewedSection = ({ onSelectProduct }) => {
 
             <div className="flex-1 flex flex-col justify-between">
               <div>
-                <p className="text-[10px] text-gray-400 truncate uppercase font-semibold">
+                <p className="text-[9px] text-gray-400 truncate uppercase font-semibold">
                   {item.category_name || "Artisan"}
                 </p>
-                <h3 className="text-xs font-bold text-gray-900 line-clamp-1 group-hover:text-[#BA5B55] transition-colors">
+                <h3 className="text-xs font-bold text-gray-900 line-clamp-1 group-hover:text-[#BA5B55] transition-colors font-serif">
                   {item.name}
                 </h3>
               </div>
