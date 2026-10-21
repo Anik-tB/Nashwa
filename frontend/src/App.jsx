@@ -126,10 +126,10 @@ const MainApp = () => {
     : "Curated Artisan Goods";
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] flex flex-col justify-between text-gray-900 font-sans antialiased selection:bg-[#BA5B55]/20 selection:text-[#BA5B55] pb-16 md:pb-0">
+    <div className="min-h-screen bg-[#FAF8F5] flex flex-col justify-between text-gray-900 font-sans antialiased selection:bg-[#BA5B55]/20 selection:text-[#BA5B55] pb-24 sm:pb-28 md:pb-0">
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 bg-[#1E180D] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-in slide-in-from-bottom duration-200 border border-amber-900/30">
+        <div className="fixed bottom-24 sm:bottom-6 right-4 sm:right-6 z-50 bg-[#1E180D] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-in slide-in-from-bottom duration-200 border border-amber-900/30">
           <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
             <Check size={14} />
           </div>

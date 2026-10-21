@@ -41,7 +41,7 @@ const ArtisanConcierge = () => {
   return (
     <>
       {/* Floating Trigger Button */}
-      <div className="fixed bottom-20 right-3 sm:bottom-6 sm:right-6 z-40">
+      <div className="fixed bottom-24 right-3.5 sm:bottom-6 sm:right-6 z-40">
         <button
           onClick={() => {
             triggerHaptic("medium");
