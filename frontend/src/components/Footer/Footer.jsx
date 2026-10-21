@@ -1,19 +1,46 @@
 import React, { useState } from "react";
 import Logo from "../Navbar/Logo";
-import { Send, Check, Heart } from "@mynaui/icons-react";
+import { Send, Check, Heart, Copy, ShieldCheck, QuestionCircle } from "@mynaui/icons-react";
 
-const Footer = ({ onNavigate }) => {
+const Footer = ({ onNavigate, onOpenFaq }) => {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [couponCode, setCouponCode] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (email.trim()) {
+    if (!email.trim() || loading) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSubscribed(true);
+        setCouponCode(data.coupon || "NASHWA10");
+      } else {
+        alert(data.error || "Subscription could not be processed.");
+      }
+    } catch (err) {
+      console.error("Newsletter error:", err);
       setSubscribed(true);
-      setTimeout(() => {
-        setEmail("");
-        setSubscribed(false);
-      }, 3500);
+      setCouponCode("NASHWA10");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyCoupon = () => {
+    if (couponCode) {
+      navigator.clipboard.writeText(couponCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -38,9 +65,23 @@ const Footer = ({ onNavigate }) => {
                 Join the Nashwa Chronicle
               </p>
               {subscribed ? (
-                <div className="p-3 bg-white/10 rounded-xl text-xs text-amber-200 flex items-center gap-2">
-                  <Check size={16} className="text-green-400" />
-                  <span>Thank you for joining our feasting & craft circle!</span>
+                <div className="p-3.5 bg-white/10 rounded-2xl border border-amber-500/20 text-xs text-amber-200 space-y-2 max-w-sm">
+                  <div className="flex items-center gap-2">
+                    <Check size={16} className="text-emerald-400" />
+                    <span className="font-semibold text-emerald-300">Welcome to our patron circle!</span>
+                  </div>
+                  <p className="text-[11px] text-gray-300">Enjoy 10% privilege on your first acquisition with voucher code:</p>
+                  <div className="flex items-center justify-between bg-black/40 px-3 py-1.5 rounded-xl border border-amber-400/30 font-mono text-amber-300 font-bold">
+                    <span>{couponCode}</span>
+                    <button
+                      onClick={copyCoupon}
+                      type="button"
+                      className="text-[10px] bg-[#BA5B55] hover:bg-[#a34d47] text-white px-2.5 py-1 rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
+                    >
+                      {copied ? <Check size={12} /> : <Copy size={12} />}
+                      <span>{copied ? "Copied" : "Copy Code"}</span>
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubscribe} className="flex max-w-sm">
@@ -49,14 +90,15 @@ const Footer = ({ onNavigate }) => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
+                    placeholder="Enter your email for 10% privilege"
                     className="flex-1 bg-white/10 border border-white/15 rounded-l-xl px-4 py-2.5 text-xs text-white placeholder:text-gray-400 focus:outline-none focus:border-[#BA5B55]"
                   />
                   <button
                     type="submit"
-                    className="bg-[#BA5B55] hover:bg-[#a34d47] px-4 py-2.5 rounded-r-xl text-xs font-semibold text-white transition-colors cursor-pointer flex items-center gap-1"
+                    disabled={loading}
+                    className="bg-[#BA5B55] hover:bg-[#a34d47] px-4 py-2.5 rounded-r-xl text-xs font-semibold text-white transition-colors cursor-pointer flex items-center gap-1 shrink-0"
                   >
-                    <Send size={14} /> Join
+                    <Send size={14} /> {loading ? "..." : "Join"}
                   </button>
                 </form>
               )}
@@ -154,20 +196,32 @@ const Footer = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Guild Trust Badges */}
-        <div className="py-6 border-b border-white/10 flex flex-wrap items-center justify-around gap-4 text-xs text-amber-200/80">
-          <span className="flex items-center gap-1.5 font-medium">
-            <span className="text-[#D4A373]">✓</span> 100% Direct Fair-Trade for Bengal Artisans
-          </span>
-          <span className="flex items-center gap-1.5 font-medium">
-            <span className="text-[#D4A373]">✓</span> 64 Districts Courier (Dhaka 24h Express)
-          </span>
-          <span className="flex items-center gap-1.5 font-medium">
-            <span className="text-[#D4A373]">✓</span> Organic Golden Jute & Muslin Packaging
-          </span>
-          <span className="flex items-center gap-1.5 font-medium">
-            <span className="text-[#D4A373]">✓</span> bKash, Nagad & Cash on Delivery Accepted
-          </span>
+        {/* Guild Trust Badges & FAQ */}
+        <div className="py-6 border-b border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-amber-200/80">
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="text-[#D4A373]">✓</span> 100% Direct Fair-Trade for Bengal Artisans
+            </span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="text-[#D4A373]">✓</span> 64 Districts Courier (Dhaka 24h Express)
+            </span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="text-[#D4A373]">✓</span> Organic Golden Jute & Muslin Packaging
+            </span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <span className="text-[#D4A373]">✓</span> bKash, Nagad & Cash on Delivery Accepted
+            </span>
+          </div>
+
+          {onOpenFaq && (
+            <button
+              onClick={onOpenFaq}
+              className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-amber-300 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer border border-amber-400/20"
+            >
+              <QuestionCircle size={14} className="text-[#D4A373]" />
+              <span>Artisan Care & Shipping FAQ</span>
+            </button>
+          )}
         </div>
 
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-4">
