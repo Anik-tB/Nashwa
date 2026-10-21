@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { X, CheckCircle, ShieldCheck, Truck, Lock, Gift, Sparkles, ArrowRight } from "@mynaui/icons-react";
+import { X, CheckCircle, ShieldCheck, Truck, Lock, Gift, Sparkles, ArrowRight, Printer } from "@mynaui/icons-react";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { useCurrency } from "../../context/CurrencyContext";
+import OrderInvoiceModal from "../Orders/OrderInvoiceModal";
 
 const CheckoutModal = ({ isOpen, onClose, onTrackOrder }) => {
   const { items, subtotal, discountAmount, shippingFee, totalPrice, appliedCoupon, clearCart } = useCart();
@@ -19,6 +20,7 @@ const CheckoutModal = ({ isOpen, onClose, onTrackOrder }) => {
   const [paymentMethod, setPaymentMethod] = useState("bkash"); // 'bkash' | 'nagad' | 'card' | 'cod'
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(null);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [error, setError] = useState("");
 
   if (!isOpen) return null;
@@ -138,18 +140,27 @@ const CheckoutModal = ({ isOpen, onClose, onTrackOrder }) => {
                     handleClose();
                     onTrackOrder(orderConfirmed.id);
                   }}
-                  className="w-full sm:w-auto px-6 py-3 bg-[#1E180D] hover:bg-black text-white rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-5 py-3 bg-[#1E180D] hover:bg-black text-white rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   <Truck size={15} />
-                  <span>Track Artisan Journey</span>
+                  <span>Track Courier Journey</span>
                 </button>
               )}
 
               <button
-                onClick={handleClose}
-                className="w-full sm:w-auto px-6 py-3 bg-[#BA5B55] hover:bg-[#a34d47] text-white rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer"
+                type="button"
+                onClick={() => setShowInvoiceModal(true)}
+                className="w-full sm:w-auto px-5 py-3 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 rounded-xl font-bold text-xs shadow-2xs transition-all cursor-pointer flex items-center justify-center gap-1.5"
               >
-                Continue Exploring Guilds
+                <Printer size={15} className="text-[#BA5B55]" />
+                <span>Tax Invoice (কর চালান)</span>
+              </button>
+
+              <button
+                onClick={handleClose}
+                className="w-full sm:w-auto px-5 py-3 bg-[#BA5B55] hover:bg-[#a34d47] text-white rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer"
+              >
+                Continue Exploring
               </button>
             </div>
           </div>
@@ -416,6 +427,15 @@ const CheckoutModal = ({ isOpen, onClose, onTrackOrder }) => {
           </div>
         )}
       </div>
+
+      {/* Tax Invoice Modal */}
+      {orderConfirmed && (
+        <OrderInvoiceModal
+          order={orderConfirmed}
+          isOpen={showInvoiceModal}
+          onClose={() => setShowInvoiceModal(false)}
+        />
+      )}
     </div>
   );
 };
