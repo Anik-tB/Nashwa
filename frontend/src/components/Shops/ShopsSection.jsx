@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Star, MapPin, CheckCircle, ArrowRight, Store } from "@mynaui/icons-react";
+import { Star, MapPin, CheckCircle, ArrowRight, Store, Mail, Sparkles } from "@mynaui/icons-react";
+import ShopDetailModal from "./ShopDetailModal";
 
 const ShopsSection = ({ onSelectShop }) => {
   const [shops, setShops] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalShopId, setModalShopId] = useState(null);
 
   useEffect(() => {
     fetch("/api/shops")
@@ -17,14 +19,14 @@ const ShopsSection = ({ onSelectShop }) => {
     <div className="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto mb-12">
-        <span className="text-xs font-bold uppercase tracking-wider text-[#BA5B55] bg-[#BA5B55]/10 px-3 py-1 rounded-full">
-          Master Guilds & Studios
+        <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#BA5B55] bg-[#BA5B55]/10 px-3 py-1 rounded-full">
+          Master Guilds & Heritage Studios
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1E180D] mt-3 tracking-tight font-serif">
+        <h1 className="text-3xl sm:text-4xl font-black text-[#1E180D] mt-3 tracking-tight font-serif">
           The Artisan Workshops
         </h1>
         <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed">
-          Every item in Nashwa is crafted with dignity, heritage mastery, and generational knowledge. Explore the independent artisans behind the craft.
+          Every piece in Nashwa is crafted with dignity, generational mastery, and transparent fair-trade economics. Meet the masters keeping ancestral traditions alive.
         </p>
       </div>
 
@@ -39,26 +41,29 @@ const ShopsSection = ({ onSelectShop }) => {
           {shops.map((shop) => (
             <div
               key={shop.id}
-              className="group bg-white rounded-3xl overflow-hidden border border-gray-100 hover:border-[#BA5B55]/40 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              className="group bg-white rounded-3xl overflow-hidden border border-amber-900/10 hover:border-[#BA5B55]/40 hover:shadow-2xl transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 {/* Shop Banner */}
-                <div className="h-44 w-full relative overflow-hidden bg-gray-100">
+                <div
+                  onClick={() => setModalShopId(shop.id)}
+                  className="h-44 w-full relative overflow-hidden bg-gray-100 cursor-pointer"
+                >
                   <img
                     src={shop.banner}
                     alt={shop.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
 
                   {/* Rating badge */}
-                  <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-xl shadow-xs flex items-center gap-1 text-xs font-bold text-gray-900">
-                    <Star size={14} className="fill-amber-400 text-amber-400" />
+                  <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-sm flex items-center gap-1 text-xs font-bold text-gray-900">
+                    <Star size={13} className="fill-amber-400 text-amber-400" />
                     <span>{shop.rating}</span>
                   </div>
 
                   {/* Logo avatar */}
-                  <div className="absolute -bottom-4 left-6 w-16 h-16 rounded-2xl border-2 border-white shadow-md overflow-hidden bg-white">
+                  <div className="absolute -bottom-4 left-6 w-16 h-16 rounded-2xl border-2 border-white shadow-lg overflow-hidden bg-white">
                     <img
                       src={shop.logo}
                       alt={shop.owner_name}
@@ -70,33 +75,44 @@ const ShopsSection = ({ onSelectShop }) => {
                 {/* Shop Information */}
                 <div className="p-6 pt-7">
                   <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-1">
-                    <MapPin size={14} className="text-[#BA5B55]" />
+                    <MapPin size={13} className="text-[#BA5B55]" />
                     <span>{shop.location}</span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#BA5B55] transition-colors flex items-center gap-1.5">
+                  <h3
+                    onClick={() => setModalShopId(shop.id)}
+                    className="text-xl font-bold text-gray-900 group-hover:text-[#BA5B55] transition-colors flex items-center gap-1.5 font-serif cursor-pointer"
+                  >
                     {shop.name}
                     <CheckCircle size={16} className="text-[#BA5B55]" />
                   </h3>
 
-                  <p className="text-xs text-amber-900/80 font-medium mt-0.5">
-                    Master Artisan: {shop.owner_name}
+                  <p className="text-xs text-amber-900/80 font-semibold mt-0.5">
+                    Master Craftsman: {shop.owner_name}
                   </p>
 
-                  <p className="text-sm text-gray-600 mt-3 leading-relaxed line-clamp-3">
+                  <p className="text-xs sm:text-sm text-gray-600 mt-3 leading-relaxed line-clamp-3">
                     {shop.description}
                   </p>
                 </div>
               </div>
 
-              {/* Action */}
-              <div className="p-6 pt-0">
+              {/* Actions */}
+              <div className="p-6 pt-0 space-y-2">
+                <button
+                  onClick={() => setModalShopId(shop.id)}
+                  className="w-full py-2.5 px-4 bg-amber-50/70 hover:bg-amber-100/80 text-amber-950 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer border border-amber-900/10"
+                >
+                  <Sparkles size={14} className="text-[#BA5B55]" />
+                  <span>Workshop Story & Commission</span>
+                </button>
+
                 <button
                   onClick={() => onSelectShop && onSelectShop(shop.id)}
-                  className="w-full py-2.5 px-4 bg-gray-50 hover:bg-[#BA5B55] text-gray-800 hover:text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer group/btn"
+                  className="w-full py-2.5 px-4 bg-gray-900 hover:bg-[#BA5B55] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer group/btn shadow-xs"
                 >
-                  <Store size={16} />
-                  <span>Browse Shop Products ({shop.product_count || 0})</span>
+                  <Store size={14} />
+                  <span>Browse Workshop Offerings ({shop.product_count || 0})</span>
                   <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
                 </button>
               </div>
@@ -104,6 +120,13 @@ const ShopsSection = ({ onSelectShop }) => {
           ))}
         </div>
       )}
+
+      {/* Workshop Profile Modal */}
+      <ShopDetailModal
+        shopId={modalShopId}
+        isOpen={Boolean(modalShopId)}
+        onClose={() => setModalShopId(null)}
+      />
     </div>
   );
 };

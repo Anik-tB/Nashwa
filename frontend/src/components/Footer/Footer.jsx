@@ -29,7 +29,7 @@ const Footer = ({ onNavigate }) => {
               </div>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed max-w-sm mt-3">
-              Nashwa connects discerning seekers with independent artisan guilds, botanical distillation houses, and masterclass mentors dedicated to the slow arts and sustainable growth.
+              Nashwa connects discerning seekers with independent artisan guilds, botanical distillation houses, and masterclass mentors across Bangladesh dedicated to the slow arts and sustainable growth.
             </p>
 
             {/* Newsletter */}
@@ -71,27 +71,27 @@ const Footer = ({ onNavigate }) => {
             <ul className="space-y-2.5 text-xs text-gray-400">
               <li>
                 <button onClick={() => onNavigate("shops")} className="hover:text-white transition-colors cursor-pointer">
-                  Al-Bazaar Botanicals
+                  Sylhet Agarwood & Dehn Al-Oud
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("shops")} className="hover:text-white transition-colors cursor-pointer">
-                  Damascus Forge & Leather
+                  Dhamrai Brass & Bell-Metal Guild
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("shops")} className="hover:text-white transition-colors cursor-pointer">
-                  Atlas Terracotta Studio
+                  Bijoypur Terracotta & Ceramics
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("shops")} className="hover:text-white transition-colors cursor-pointer">
-                  Silk & Saffron Guild
+                  Sundarbans Wild Honey & Apiary
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("shops")} className="hover:text-white transition-colors cursor-pointer">
-                  Al-Hikmah Bindery
+                  Sonargaon Jamdani & Silk Guild
                 </button>
               </li>
             </ul>
@@ -104,57 +104,73 @@ const Footer = ({ onNavigate }) => {
             <ul className="space-y-2.5 text-xs text-gray-400">
               <li>
                 <button onClick={() => onNavigate("university")} className="hover:text-white transition-colors cursor-pointer">
-                  Natural Perfumery Mastery
+                  Sylhet Agarwood Hydro-Distillation
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("university")} className="hover:text-white transition-colors cursor-pointer">
-                  Artisan Business Building
+                  Artisan Export & Global Branding
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("university")} className="hover:text-white transition-colors cursor-pointer">
-                  Clay & Earth Glaze Kilns
+                  Dhamrai Lost-Wax Bell Metallurgy
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("university")} className="hover:text-white transition-colors cursor-pointer">
-                  Ancient Spice Storytelling
+                  Bengali Culinary Heritage & Spices
                 </button>
               </li>
             </ul>
           </div>
 
-          <div>
+            <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-amber-300/90 mb-4">
               Feasts & Gathering
             </h4>
             <ul className="space-y-2.5 text-xs text-gray-400">
               <li>
                 <button onClick={() => onNavigate("events")} className="hover:text-white transition-colors cursor-pointer">
-                  Autumn Solstice Dinner
+                  Nabanna Harvest Feast & Acoustic Oud
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("events")} className="hover:text-white transition-colors cursor-pointer">
-                  Medina Night Souk
+                  Dhamrai & Sonargaon Grand Souk
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("events")} className="hover:text-white transition-colors cursor-pointer">
-                  Botanical Scent Labs
+                  Sylhet Scent Blending Masterclass
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate("events")} className="hover:text-white transition-colors cursor-pointer">
-                  Hearth Sourdough Baking
+                  Clay Hearth & Sundarbans Honey Tasting
                 </button>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+        {/* Guild Trust Badges */}
+        <div className="py-6 border-b border-white/10 flex flex-wrap items-center justify-around gap-4 text-xs text-amber-200/80">
+          <span className="flex items-center gap-1.5 font-medium">
+            <span className="text-[#D4A373]">✓</span> 100% Direct Fair-Trade for Bengal Artisans
+          </span>
+          <span className="flex items-center gap-1.5 font-medium">
+            <span className="text-[#D4A373]">✓</span> 64 Districts Courier (Dhaka 24h Express)
+          </span>
+          <span className="flex items-center gap-1.5 font-medium">
+            <span className="text-[#D4A373]">✓</span> Organic Golden Jute & Muslin Packaging
+          </span>
+          <span className="flex items-center gap-1.5 font-medium">
+            <span className="text-[#D4A373]">✓</span> bKash, Nagad & Cash on Delivery Accepted
+          </span>
+        </div>
+
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-4">
           <p>© {new Date().getFullYear()} Nashwa Collective. All rights reserved.</p>
           <div className="flex items-center gap-1 text-gray-400">
             <span>Crafted with</span>

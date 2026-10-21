@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider, useCart } from "./context/CartContext";
+import { CurrencyProvider } from "./context/CurrencyContext";
+import { WishlistProvider } from "./context/WishlistContext";
 
 import Navbar from "./components/Navbar/Navbar";
 import HeroSection from "./components/Hero/HeroSection";
 import CategorySection from "./components/Category/CategorySection";
 import ProductGrid from "./components/Catalog/ProductGrid";
+import ProductQuickView from "./components/Catalog/ProductQuickView";
 import ShopsSection from "./components/Shops/ShopsSection";
 import UniversitySection from "./components/University/UniversitySection";
 import EventsSection from "./components/Events/EventsSection";
 import CartDrawer from "./components/Cart/CartDrawer";
+import WishlistDrawer from "./components/Wishlist/WishlistDrawer";
 import CheckoutModal from "./components/Cart/CheckoutModal";
 import OrdersModal from "./components/Orders/OrdersModal";
+import OrderTrackingModal from "./components/Orders/OrderTrackingModal";
 import LoginModal from "./components/LoginModal/LoginModal";
+import PatronProfileModal from "./components/Account/PatronProfileModal";
+import RecentlyViewedSection from "./components/Catalog/RecentlyViewedSection";
+import ManifestoModal from "./components/Manifesto/ManifestoModal";
+import ArtisanConcierge from "./components/Common/ArtisanConcierge";
 import Footer from "./components/Footer/Footer";
 import { Check } from "@mynaui/icons-react";
 
@@ -33,8 +42,12 @@ const MainApp = () => {
 
   // Modals state
   const [authModal, setAuthModal] = useState({ isOpen: false, view: "login" });
+  const [profileOpen, setProfileOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [ordersOpen, setOrdersOpen] = useState(false);
+  const [manifestoOpen, setManifestoOpen] = useState(false);
+  const [trackingOrderId, setTrackingOrderId] = useState(null);
+  const [selectedQuickViewProduct, setSelectedQuickViewProduct] = useState(null);
 
   // Fetch Categories once
   useEffect(() => {
@@ -110,11 +123,11 @@ const MainApp = () => {
     : "Curated Artisan Goods";
 
   return (
-    <div className="min-h-screen bg-[#F2F4F7] flex flex-col justify-between text-gray-900 font-sans antialiased selection:bg-[#BA5B55]/20 selection:text-[#BA5B55]">
+    <div className="min-h-screen bg-[#FAF8F5] flex flex-col justify-between text-gray-900 font-sans antialiased selection:bg-[#BA5B55]/20 selection:text-[#BA5B55]">
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#1E180D] text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-semibold animate-in slide-in-from-bottom duration-200 border border-amber-900/30">
-          <div className="w-5 h-5 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center">
+        <div className="fixed bottom-6 right-6 z-50 bg-[#1E180D] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold animate-in slide-in-from-bottom duration-200 border border-amber-900/30">
+          <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
             <Check size={14} />
           </div>
           <span>{toast}</span>
@@ -126,12 +139,15 @@ const MainApp = () => {
         activeTab={activeTab}
         setActiveTab={(tab) => {
           setActiveTab(tab);
-          if (tab !== "home") clearAllFilters();
+          if (tab !== "home" && tab !== "categories") clearAllFilters();
         }}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onOpenAuth={(view) => setAuthModal({ isOpen: true, view })}
         onOpenOrders={() => setOrdersOpen(true)}
+        onOpenProfile={() => setProfileOpen(true)}
+        onOpenManifesto={() => setManifestoOpen(true)}
+        onSelectProduct={(p) => setSelectedQuickViewProduct(p)}
       />
 
       {/* Main View Area based on activeTab */}
@@ -141,6 +157,7 @@ const MainApp = () => {
             <HeroSection
               onNavigate={(tab) => setActiveTab(tab)}
               onSearchPillClick={handleSearchPill}
+              onOpenManifesto={() => setManifestoOpen(true)}
             />
 
             <CategorySection
@@ -157,7 +174,11 @@ const MainApp = () => {
               searchQuery={searchQuery}
               onClearSearch={clearAllFilters}
               categoryTitle={categoryTitle}
+              onBuyNow={() => setCheckoutOpen(true)}
             />
+
+            {/* Recently Admired Works (Patron Journey) */}
+            <RecentlyViewedSection onSelectProduct={(p) => setSelectedQuickViewProduct(p)} />
           </>
         )}
 
@@ -180,7 +201,9 @@ const MainApp = () => {
               searchQuery={searchQuery}
               onClearSearch={clearAllFilters}
               categoryTitle={categoryTitle}
+              onBuyNow={() => setCheckoutOpen(true)}
             />
+            <RecentlyViewedSection onSelectProduct={(p) => setSelectedQuickViewProduct(p)} />
           </div>
         )}
 
@@ -192,12 +215,15 @@ const MainApp = () => {
       {/* Footer */}
       <Footer onNavigate={(tab) => setActiveTab(tab)} />
 
-      {/* Modals & Overlays */}
+      {/* Slide-over Drawers */}
       <CartDrawer onProceedToCheckout={() => setCheckoutOpen(true)} />
+      <WishlistDrawer onSelectProduct={(p) => setSelectedQuickViewProduct(p)} />
 
+      {/* Modals & Overlays */}
       <CheckoutModal
         isOpen={checkoutOpen}
         onClose={() => setCheckoutOpen(false)}
+        onTrackOrder={(id) => setTrackingOrderId(id)}
       />
 
       <OrdersModal
@@ -205,11 +231,47 @@ const MainApp = () => {
         onClose={() => setOrdersOpen(false)}
       />
 
+      <OrderTrackingModal
+        orderId={trackingOrderId}
+        isOpen={Boolean(trackingOrderId)}
+        onClose={() => setTrackingOrderId(null)}
+      />
+
+      <ManifestoModal
+        isOpen={manifestoOpen}
+        onClose={() => setManifestoOpen(false)}
+        onExplore={() => {
+          setActiveTab("home");
+          clearAllFilters();
+        }}
+      />
+
+      {/* Quick View when triggered from search or wishlist */}
+      {selectedQuickViewProduct && (
+        <ProductQuickView
+          isOpen={Boolean(selectedQuickViewProduct)}
+          product={selectedQuickViewProduct}
+          onClose={() => setSelectedQuickViewProduct(null)}
+          onBuyNow={() => setCheckoutOpen(true)}
+        />
+      )}
+
+      {/* Patron Sign In & Join Modal */}
       <LoginModal
         isOpen={authModal.isOpen}
         initialView={authModal.view}
         onClose={() => setAuthModal({ isOpen: false, view: "login" })}
       />
+
+      {/* Patron Profile & Guild Account Dashboard */}
+      <PatronProfileModal
+        isOpen={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        onOpenOrders={() => setOrdersOpen(true)}
+      />
+
+      {/* Floating Artisan Concierge Desk */}
+      <ArtisanConcierge />
     </div>
   );
 };
@@ -217,9 +279,13 @@ const MainApp = () => {
 const App = () => {
   return (
     <AuthProvider>
-      <CartProvider>
-        <MainApp />
-      </CartProvider>
+      <CurrencyProvider>
+        <WishlistProvider>
+          <CartProvider>
+            <MainApp />
+          </CartProvider>
+        </WishlistProvider>
+      </CurrencyProvider>
     </AuthProvider>
   );
 };
