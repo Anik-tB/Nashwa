@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 import ProductQuickView from "./ProductQuickView";
 import { Search, Filter, Sparkles, Check, X } from "@mynaui/icons-react";
+import { useCurrency } from "../../context/CurrencyContext";
 
 const ProductGrid = ({
   products,
@@ -11,8 +12,10 @@ const ProductGrid = ({
   searchQuery,
   onClearSearch,
   categoryTitle,
-  onBuyNow
+  onBuyNow,
+  onOpenFaq
 }) => {
+  const { formatPrice } = useCurrency();
   const [quickViewProduct, setQuickViewProduct] = useState(null);
 
   // Additional Filter states
@@ -121,9 +124,9 @@ const ProductGrid = ({
         {/* Price chips */}
         {[
           { id: "all", label: "All Prices" },
-          { id: "under50", label: "Under $50" },
-          { id: "50to100", label: "$50 – $100" },
-          { id: "over100", label: "$100+" }
+          { id: "under50", label: `Under ${formatPrice(50)}` },
+          { id: "50to100", label: `${formatPrice(50)} – ${formatPrice(100)}` },
+          { id: "over100", label: `${formatPrice(100)}+` }
         ].map((chip) => (
           <button
             key={chip.id}
@@ -225,6 +228,7 @@ const ProductGrid = ({
         product={quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
         onBuyNow={onBuyNow}
+        onOpenFaq={onOpenFaq}
       />
     </section>
   );

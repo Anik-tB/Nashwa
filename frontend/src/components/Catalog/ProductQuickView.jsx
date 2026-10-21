@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { X, Star, Cart, Check, Heart, ShieldCheck, Sparkles, Send, Box } from "@mynaui/icons-react";
+import { X, Star, Cart, Check, Heart, ShieldCheck, Sparkles, Send, Box, Truck, Share, Copy } from "@mynaui/icons-react";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
 import { useCurrency } from "../../context/CurrencyContext";
 import ProvenanceModal from "./ProvenanceModal";
 
-const ProductQuickView = ({ product, isOpen, onClose, onBuyNow }) => {
+const ProductQuickView = ({ product, isOpen, onClose, onBuyNow, onOpenFaq }) => {
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { formatPrice } = useCurrency();
@@ -14,6 +14,8 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow }) => {
   const [added, setAdded] = useState(false);
   const [activeTab, setActiveTab] = useState("details"); // 'details' | 'reviews' | 'care'
   const [provenanceOpen, setProvenanceOpen] = useState(false);
+  const [selectedDistrict, setSelectedDistrict] = useState("Dhaka");
+  const [shareCopied, setShareCopied] = useState(false);
 
   // Reviews state
   const [reviews, setReviews] = useState([]);
@@ -25,6 +27,25 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow }) => {
   const [reviewSuccess, setReviewSuccess] = useState("");
 
   const isSaved = product ? isInWishlist(product.id) : false;
+
+  const getEstimatedDate = (district) => {
+    const today = new Date();
+    const daysToAdd = district === "Dhaka" ? 1 : district === "Chittagong" || district === "Sylhet" || district === "Mymensingh" ? 2 : 3;
+    const est = new Date(today.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+    return est.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  };
+
+  const handleShareWhatsApp = () => {
+    if (!product) return;
+    const text = encodeURIComponent(`Explore "${product.name}" handcrafted by ${product.shop_name || "Bengal Guilds"} on Nashwa: ${window.location.href}`);
+    window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2000);
+  };
 
   useEffect(() => {
     if (isOpen && product) {
@@ -208,8 +229,49 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow }) => {
                 </button>
               </div>
 
+              {/* Batch Scarcity Meter */}
+              <div className="mt-3 p-2 bg-amber-50/70 rounded-xl border border-amber-900/10 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="text-[11px] font-medium text-amber-950">
+                    Slow-Craft Batch: <strong className="text-[#BA5B55]">Only {product.stock || 8} units crafted</strong>
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider">
+                  Hand-Poured / Cast
+                </span>
+              </div>
+
+              {/* District Delivery Estimator */}
+              <div className="mt-2 p-2.5 bg-gray-50 rounded-xl border border-gray-100 flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-gray-700 flex items-center gap-1.5">
+                    <Truck size={14} className="text-[#BA5B55]" />
+                    <span>Courier Estimate:</span>
+                  </span>
+                  <select
+                    value={selectedDistrict}
+                    onChange={(e) => setSelectedDistrict(e.target.value)}
+                    className="text-[11px] bg-white border border-gray-200 rounded-lg px-2 py-0.5 font-medium text-gray-800 focus:outline-none focus:border-[#BA5B55] cursor-pointer"
+                  >
+                    <option value="Dhaka">Dhaka City (24h Express)</option>
+                    <option value="Chittagong">Chittagong (48h)</option>
+                    <option value="Sylhet">Sylhet (48h)</option>
+                    <option value="Rajshahi">Rajshahi (2-3 Days)</option>
+                    <option value="Khulna">Khulna (2-3 Days)</option>
+                    <option value="Barishal">Barishal (2-3 Days)</option>
+                    <option value="Rangpur">Rangpur (2-3 Days)</option>
+                    <option value="Mymensingh">Mymensingh (48h)</option>
+                    <option value="Other">All 64 Districts (3 Days)</option>
+                  </select>
+                </div>
+                <p className="text-[10px] text-gray-500">
+                  Receive by <strong className="text-gray-900">{getEstimatedDate(selectedDistrict)}</strong> in insured tamper-proof packaging.
+                </p>
+              </div>
+
               {/* Navigation Tabs inside modal */}
-              <div className="mt-5 flex border-b border-gray-100 gap-4 text-xs font-semibold">
+              <div className="mt-4 flex border-b border-gray-100 gap-4 text-xs font-semibold">
                 <button
                   onClick={() => setActiveTab("details")}
                   className={`pb-2 transition-colors cursor-pointer ${
@@ -342,13 +404,54 @@ const ProductQuickView = ({ product, isOpen, onClose, onBuyNow }) => {
                       <Sparkles size={16} className="text-[#BA5B55] shrink-0 mt-0.5" />
                       <p><strong className="text-gray-900">Care Advice:</strong> Wipe brass and pottery with a dry cotton cloth. Store botanical oils away from direct sunlight.</p>
                     </div>
+
+                    {onOpenFaq && (
+                      <div className="pt-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onClose();
+                            onOpenFaq();
+                          }}
+                          className="text-xs text-[#BA5B55] hover:text-[#9c4742] font-bold underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>Explore Artisan Care, Breakage Guarantee & Courier FAQ →</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Quantity and Actions */}
-            <div className="mt-6 pt-5 border-t border-gray-100 flex flex-col gap-2.5">
+            {/* Quantity, Share & Actions */}
+            <div className="mt-5 pt-4 border-t border-gray-100 flex flex-col gap-2.5">
+              {/* Share Craft Bar */}
+              <div className="flex items-center justify-between text-xs pb-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                  Share Piece
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleShareWhatsApp}
+                    className="text-[10px] px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg font-semibold flex items-center gap-1 border border-emerald-200 transition-colors cursor-pointer"
+                    title="Share via WhatsApp"
+                  >
+                    <Share size={12} /> WhatsApp
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCopyLink}
+                    className="text-[10px] px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                    title="Copy Link"
+                  >
+                    {shareCopied ? <Check size={12} className="text-emerald-600" /> : <Copy size={12} />}
+                    <span>{shareCopied ? "Link Copied" : "Copy Link"}</span>
+                  </button>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-gray-700">Quantity</span>
                 <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
