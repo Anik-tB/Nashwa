@@ -51,9 +51,22 @@ app.use('/api/university', universityRoutes);
 app.use('/api/events', eventsRoutes);
 app.use('/api/orders', ordersRoutes);
 
-// Fallback 404 for API
-app.use('/api/*', (req, res) => {
-  res.status(404).json({ error: 'Endpoint not found' });
+// Favicon & Chrome DevTools probes
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+app.all('/.well-known/*', (req, res) => res.status(204).end());
+
+// Root info
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    name: 'Nashwa - The Path to Growth API',
+    version: '1.0.0'
+  });
+});
+
+// Fallback 404 for all unhandled routes (prevents Express default-src 'none' CSP on unhandled requests)
+app.use((req, res) => {
+  res.status(404).json({ error: 'Endpoint not found', path: req.originalUrl });
 });
 
 // Global Error Handler

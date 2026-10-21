@@ -196,4 +196,135 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// GET /api/products/:id/reviews
+router.get('/:id/reviews', async (req, res) => {
+  try {
+    const productId = Number(req.params.id);
+
+    if (isSupabaseConfigured()) {
+      const { data: reviews, error } = await supabase
+        .from('reviews')
+        .select('*')
+        .eq('product_id', productId)
+        .order('id', { ascending: false });
+
+      if (error) throw error;
+
+      const total = (reviews || []).length;
+      const avg = total > 0 ? ((reviews || []).reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1) : 5.0;
+
+      return res.json({
+        product_id: productId,
+        average_rating: Number(avg),
+        total_reviews: total,
+        reviews: reviews || []
+      });
+    }
+
+    const reviews = db.prepare(`
+      SELECT * FROM reviews 
+      WHERE product_id = ? 
+      ORDER BY id DESC
+    `).all(productId);
+
+    // Compute stats
+    const total = reviews.length;
+    const avg = total > 0 ? (reviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(1) : 5.0;
+
+    res.json({
+      product_id: productId,
+      average_rating: Number(avg),
+      total_reviews: total,
+      reviews
+    });
+  } catch (err) {
+    console.error('Fetch reviews error:', err);
+    res.status(500).json({ error: 'Failed to fetch product reviews.' });
+  }
+});
+
+// POST /api/products/:id/reviews
+router.post('/:id/reviews', async (req, res) => {
+  try {
+    const productId = Number(req.params.id);
+    const { user_name, rating, comment } = req.body;
+
+    if (!user_name || !rating || !comment) {
+      return res.status(400).json({ error: 'Name, rating, and review comment are required.' });
+    }
+
+    const numRating = Math.max(1, Math.min(5, Number(rating)));
+
+    if (isSupabaseConfigured()) {
+      const { data: newReview, error: insertError } = await supabase
+        .from('reviews')
+        .insert([{
+          product_id: productId,
+          user_name: user_name.trim(),
+          rating: numRating,
+          comment: comment.trim()
+        }])
+        .select()
+        .single();
+
+      if (insertError) throw insertError;
+
+      // Re-calculate stats
+      const { data: allReviews } = await supabase
+        .from('reviews')
+        .select('rating')
+        .eq('product_id', productId);
+
+      if (allReviews && allReviews.length > 0) {
+        const total = allReviews.length;
+        const avg = Number((allReviews.reduce((acc, r) => acc + r.rating, 0) / total).toFixed(2));
+        await supabase
+          .from('products')
+          .update({ rating: avg, reviews_count: total })
+          .eq('id', productId);
+      }
+
+      return res.status(201).json({
+        message: 'Thank you for reviewing this handcrafted creation! Your review is now live.',
+        review: newReview
+      });
+    }
+
+    const result = db.prepare(`
+      INSERT INTO reviews (product_id, user_name, rating, comment)
+      VALUES (?, ?, ?, ?)
+    `).run(productId, user_name.trim(), numRating, comment.trim());
+
+    // Update product rating and reviews count
+    const stats = db.prepare(`
+      SELECT AVG(rating) as avg_rating, COUNT(*) as count 
+      FROM reviews 
+      WHERE product_id = ?
+    `).get(productId);
+
+    if (stats && stats.count > 0) {
+      db.prepare(`
+        UPDATE products 
+        SET rating = ROUND(?, 2), reviews_count = ?
+        WHERE id = ?
+      `).run(stats.avg_rating, stats.count, productId);
+    }
+
+    res.status(201).json({
+      message: 'Thank you for reviewing this handcrafted creation! Your review is now live.',
+      review: {
+        id: Number(result.lastInsertRowid),
+        product_id: productId,
+        user_name: user_name.trim(),
+        rating: numRating,
+        comment: comment.trim(),
+        created_at: new Date().toISOString()
+      }
+    });
+  } catch (err) {
+    console.error('Post review error:', err);
+    res.status(500).json({ error: 'Failed to submit review.' });
+  }
+});
+
 export default router;

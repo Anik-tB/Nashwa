@@ -89,4 +89,62 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// POST /api/shops/:id/inquiry
+router.post('/:id/inquiry', async (req, res) => {
+  try {
+    const shopId = Number(req.params.id);
+    const { sender_name, sender_email, message } = req.body;
+
+    if (!sender_name || !sender_email || !message) {
+      return res.status(400).json({ error: 'Name, email, and inquiry message are required.' });
+    }
+
+    if (isSupabaseConfigured()) {
+      const { data: shop, error: shopErr } = await supabase
+        .from('shops')
+        .select('*')
+        .eq('id', shopId)
+        .single();
+
+      if (shopErr || !shop) {
+        return res.status(404).json({ error: 'Artisan workshop not found.' });
+      }
+
+      const { error: inqErr } = await supabase
+        .from('artisan_inquiries')
+        .insert([{
+          shop_id: shopId,
+          sender_name: sender_name.trim(),
+          sender_email: sender_email.trim(),
+          message: message.trim()
+        }]);
+
+      if (inqErr) throw inqErr;
+
+      return res.status(200).json({
+        message: `Your inquiry has been relayed directly to ${shop.owner_name} at ${shop.name}. You will receive a personal artisan response at ${sender_email} within 24 hours.`,
+        shop_name: shop.name
+      });
+    }
+
+    const shop = db.prepare('SELECT * FROM shops WHERE id = ?').get(shopId);
+    if (!shop) {
+      return res.status(404).json({ error: 'Artisan workshop not found.' });
+    }
+
+    db.prepare(`
+      INSERT INTO artisan_inquiries (shop_id, sender_name, sender_email, message)
+      VALUES (?, ?, ?, ?)
+    `).run(shopId, sender_name.trim(), sender_email.trim(), message.trim());
+
+    res.status(200).json({
+      message: `Your inquiry has been relayed directly to ${shop.owner_name} at ${shop.name}. You will receive a personal artisan response at ${sender_email} within 24 hours.`,
+      shop_name: shop.name
+    });
+  } catch (err) {
+    console.error('Artisan inquiry error:', err);
+    res.status(500).json({ error: 'Failed to send inquiry to artisan workshop.' });
+  }
+});
+
 export default router;
